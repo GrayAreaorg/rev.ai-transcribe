@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Captions</title>
+    <style>
+      body {
+        background: #0f0;
+      }
+      span[data-caption-ts] {
+        background: black;
+        color: white;
+        font-family: Helvetica, sans-serif;
+        font-size: 36px;
+        padding: 5px;
+        line-height:1.25em;
+        display:inline-block;
+      }
+      .fade-out {
+        animation: fadeOut 0.5s forwards;
+      }
+
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="captions"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var captionsContainer = document.getElementById("captions");
+
+      const PARTIAL = "partial";
+      const FINAL = "final";
+      const CAPTION_DATA_ATTR = "data-caption-ts";
+      const CAPTION_DATA_ATTR_TYPE = "data-caption-type";
+      let partialTS = "";
+      const finalTS = [];
+      const MAX_LENGTH = 3;
+
+      socket.on("caption", function (data) {
+        // create <span> per partial caption
+        var captionElement = document.createElement("span");
+        captionElement.setAttribute(CAPTION_DATA_ATTR, data.ts);
+
+        // save timestamps to keep track of caption elements
+        if (data.type === PARTIAL) {
+          partialTS = data.ts;
+          captionElement.setAttribute(CAPTION_DATA_ATTR_TYPE, PARTIAL);
+        } else {
+          // remove all old partials
+          var oldPartials = document.querySelectorAll(
+            `[${CAPTION_DATA_ATTR_TYPE}='${PARTIAL}']`
+          );
+          oldPartials.forEach((partial) =>
+            captionsContainer.removeChild(partial)
+          );
+          finalTS.push(data.ts);
+        }
+
+        // set the inner text with each partial.
+        // add a space to the end if it's a final.
+        captionElement.innerText =
+          data.elements
+            .map((element) => element.value)
+            .join(data.type === PARTIAL ? " " : "") + " ";
+
+        // find any old partials
+        var oldPartialElements = document.querySelectorAll(
+          `[${CAPTION_DATA_ATTR}='${partialTS}']`
+        );
+
+        // remove old partials
+        oldPartialElements.forEach((partial) =>
+          captionsContainer.removeChild(partial)
+        );
+
+        // append fresh captions
+        captionsContainer.appendChild(captionElement);
+
+        // remove old final captions
+        if (finalTS.length > MAX_LENGTH) {
+          const remove = finalTS.shift();
+          var oldCaptions = document.querySelectorAll(
+            `[${CAPTION_DATA_ATTR}='${remove}']`
+          );
+
+          oldCaptions.forEach((final) => {
+            final.classList.add("fade-out");
+            setTimeout(() => captionsContainer.removeChild(final), 500); // match the duration of your CSS transition
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
