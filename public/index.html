@@ -34,7 +34,7 @@
       const CAPTION_DATA_ATTR_TYPE = "data-caption-type";
       let partialTS = "";
       const finalTS = [];
-      const MAX_LENGTH = 3;
+      const MAX_LENGTH = 50;
 
       socket.on("caption", function (data) {
         // create element per partial caption
@@ -77,6 +77,19 @@
         captionsContainer.appendChild(captionElement);
 
         captionElement.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+
+        // remove old captions after they're past the scroll
+        if (finalTS.length > MAX_LENGTH) {
+          const remove = finalTS.shift();
+          var oldCaptions = document.querySelectorAll(
+            `[${CAPTION_DATA_ATTR}='${remove}']`
+          );
+
+          oldCaptions.forEach((final) => {
+            final.classList.add("fade-out");
+            setTimeout(() => captionsContainer.removeChild(final), 500); // match the duration of your CSS transition
+          });
+        }        
       });
     </script>
   </body>
