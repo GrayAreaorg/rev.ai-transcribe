@@ -1,0 +1,18 @@
+body {
+  background: #0f0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+#captions {
+  overflow: hidden;
+}
+div[data-caption-ts] {
+  background: black;
+  color: white;
+  font-family: Helvetica, sans-serif;
+  font-size: 36px;
+  padding: 5px;
+  line-height: 1.25em;
+  display: inline;
+}
