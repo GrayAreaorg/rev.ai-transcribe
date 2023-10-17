@@ -16,7 +16,7 @@
         font-family: Helvetica, sans-serif;
         font-size: 36px;
         padding: 5px;
-        line-height:1.25em;
+        line-height: 1.25em;
         display: inline;
       }
     </style>
@@ -63,33 +63,23 @@
             .map((element) => element.value)
             .join(data.type === PARTIAL ? " " : "") + " ";
 
-        // find any old partials
-        var oldPartialElements = document.querySelectorAll(
-          `[${CAPTION_DATA_ATTR}='${partialTS}']`
-        );
-
-        // remove old partials
-        oldPartialElements.forEach((partial) =>
-          captionsContainer.removeChild(partial)
-        );
+        // find any old partials and remove them
+        document
+          .querySelectorAll(`[${CAPTION_DATA_ATTR}='${partialTS}']`)
+          .forEach((partial) => captionsContainer.removeChild(partial));
 
         // append fresh captions
         captionsContainer.appendChild(captionElement);
 
-        captionElement.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+        captionElement.scrollIntoView({ block: "end", behavior: "smooth" });
 
         // remove old captions after they're past the scroll
         if (finalTS.length > MAX_LENGTH) {
           const remove = finalTS.shift();
-          var oldCaptions = document.querySelectorAll(
-            `[${CAPTION_DATA_ATTR}='${remove}']`
-          );
-
-          oldCaptions.forEach((final) => {
-            final.classList.add("fade-out");
-            setTimeout(() => captionsContainer.removeChild(final), 500); // match the duration of your CSS transition
-          });
-        }        
+          document
+            .querySelectorAll(`[${CAPTION_DATA_ATTR}='${remove}']`)
+            .forEach((final) => captionsContainer.removeChild(final));
+        }
       });
     </script>
   </body>
