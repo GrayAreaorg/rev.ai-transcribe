@@ -45,7 +45,7 @@
       const MAX_LENGTH = 3;
 
       socket.on("caption", function (data) {
-        // create <span> per partial caption
+        // create element per partial caption
         var captionElement = document.createElement("div");
         captionElement.setAttribute(CAPTION_DATA_ATTR, data.ts);
 
@@ -93,7 +93,7 @@
 
           oldCaptions.forEach((final) => {
             final.classList.add("fade-out");
-            setTimeout(() => captionsContainer.removeChild(final), 500); // match the duration of your CSS transition
+            setTimeout(() => captionsContainer.removeChild(final), 500); // match the duration of the CSS transition
           });
         }
       });
