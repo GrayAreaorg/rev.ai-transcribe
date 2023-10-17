@@ -14,6 +14,10 @@ Node v20.7.0
 
 ## Run
 
+Rename `.env-example` to `.env` and set the `REVAI_ACCESS_TOKEN`.
+
+Run
+
 `node app.js`
 
 Open a browser and go to `localhost:3000`
