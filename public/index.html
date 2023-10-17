@@ -46,7 +46,7 @@
           partialTS = data.ts;
           captionElement.setAttribute(CAPTION_DATA_ATTR_TYPE, PARTIAL);
         } else {
-          // remove all old partials
+          // remove all old partials if it's a final
           var oldPartials = document.querySelectorAll(
             `[${CAPTION_DATA_ATTR_TYPE}='${PARTIAL}']`
           );
@@ -71,9 +71,10 @@
         // append fresh captions
         captionsContainer.appendChild(captionElement);
 
+        // scroll caption into view
         captionElement.scrollIntoView({ block: "end", behavior: "smooth" });
 
-        // remove old captions after they're past the scroll
+        // remove any old captions after they're past the scroll
         if (finalTS.length > MAX_LENGTH) {
           const remove = finalTS.shift();
           document
