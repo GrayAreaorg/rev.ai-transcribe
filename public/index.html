@@ -6,7 +6,7 @@
       body {
         background: #0f0;
       }
-      span[data-caption-ts] {
+      div[data-caption-ts] {
         background: black;
         color: white;
         font-family: Helvetica, sans-serif;
@@ -46,7 +46,7 @@
 
       socket.on("caption", function (data) {
         // create <span> per partial caption
-        var captionElement = document.createElement("span");
+        var captionElement = document.createElement("div");
         captionElement.setAttribute(CAPTION_DATA_ATTR, data.ts);
 
         // save timestamps to keep track of caption elements
