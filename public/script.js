@@ -7,7 +7,7 @@ const CAPTION_DATA_ATTR = "data-caption-ts";
 const CAPTION_DATA_ATTR_TYPE = "data-caption-type";
 let partialTS = "";
 const finalTS = [];
-const MAX_LENGTH = 50;
+const MAX_LENGTH = 200;
 
 socket.on("caption", function (data) {
   // create element per partial caption
