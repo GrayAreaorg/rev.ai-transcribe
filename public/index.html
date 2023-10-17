@@ -6,6 +6,11 @@
       body {
         background: #0f0;
       }
+      #captions {
+        background: #f0f;
+        height: 180px;
+        overflow: hidden;
+      }
       div[data-caption-ts] {
         background: black;
         color: white;
@@ -13,19 +18,7 @@
         font-size: 36px;
         padding: 5px;
         line-height:1.25em;
-        display:inline-block;
-      }
-      .fade-out {
-        animation: fadeOut 0.5s forwards;
-      }
-
-      @keyframes fadeOut {
-        from {
-          opacity: 1;
-        }
-        to {
-          opacity: 0;
-        }
+        display: inline;
       }
     </style>
   </head>
@@ -84,18 +77,7 @@
         // append fresh captions
         captionsContainer.appendChild(captionElement);
 
-        // remove old final captions
-        if (finalTS.length > MAX_LENGTH) {
-          const remove = finalTS.shift();
-          var oldCaptions = document.querySelectorAll(
-            `[${CAPTION_DATA_ATTR}='${remove}']`
-          );
-
-          oldCaptions.forEach((final) => {
-            final.classList.add("fade-out");
-            setTimeout(() => captionsContainer.removeChild(final), 500); // match the duration of the CSS transition
-          });
-        }
+        captionElement.scrollIntoView({ block: 'end',  behavior: 'smooth' });
       });
     </script>
   </body>
