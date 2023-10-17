@@ -2,6 +2,8 @@
 
 A microsite for generating captions from an incoming audio stream.
 
+![Screenshot](screenshot.png)
+
 ## Requirements
 
 Node v20.7.0
@@ -15,4 +17,3 @@ Node v20.7.0
 `node app.js`
 
 Open a browser and go to `localhost:3000`
-
