@@ -3,53 +3,47 @@ var captionsContainer = document.getElementById("captions");
 
 const PARTIAL = "partial";
 const FINAL = "final";
-const CAPTION_DATA_ATTR = "data-caption-ts";
-const CAPTION_DATA_ATTR_TYPE = "data-caption-type";
+const ATTR_TS = "data-caption-ts";
+const ATTR_TYPE = "data-caption-type";
 let partialTS = "";
 const finalTS = [];
 const MAX_LENGTH = 200;
 
 socket.on("caption", function (data) {
-  // create element per partial caption
   var captionElement = document.createElement("div");
-  captionElement.setAttribute(CAPTION_DATA_ATTR, data.ts);
+  captionElement.setAttribute(ATTR_TS, data.ts);
 
-  // save timestamps to keep track of caption elements
   if (data.type === PARTIAL) {
+    // keep track of the partials timestamps to remove them later
     partialTS = data.ts;
-    captionElement.setAttribute(CAPTION_DATA_ATTR_TYPE, PARTIAL);
+    captionElement.setAttribute(ATTR_TYPE, PARTIAL);
   } else {
-    // remove all old partials if it's a final
-    var oldPartials = document.querySelectorAll(
-      `[${CAPTION_DATA_ATTR_TYPE}='${PARTIAL}']`
-    );
-    oldPartials.forEach((partial) => captionsContainer.removeChild(partial));
+    // if final caption, remove all old partials
+    var oldPartials = document.querySelectorAll(`[${ATTR_TYPE}='${PARTIAL}']`);
+    oldPartials.forEach((partial) => partial.remove());
     finalTS.push(data.ts);
   }
 
-  // set the inner text with each partial.
-  // add a space to the end if it's a final.
+  // remove all previous partials with the current timestamp
+  var oldPartials = document.querySelectorAll(`[${ATTR_TS}='${partialTS}']`);
+  oldPartials.forEach((partial) => partial.remove());
+
+  // join all partials
   captionElement.innerText =
     data.elements
       .map((element) => element.value)
       .join(data.type === PARTIAL ? " " : "") + " ";
-
-  // find any old partials and remove them
-  document
-    .querySelectorAll(`[${CAPTION_DATA_ATTR}='${partialTS}']`)
-    .forEach((partial) => captionsContainer.removeChild(partial));
-
-  // append fresh captions
+  
+  // append caption elements
   captionsContainer.appendChild(captionElement);
 
-  // scroll caption into view
+  // scroll into view
   captionElement.scrollIntoView({ block: "end", behavior: "smooth" });
 
-  // remove any old captions after they're past the scroll
+  // remove older captions
   if (finalTS.length > MAX_LENGTH) {
     const remove = finalTS.shift();
-    document
-      .querySelectorAll(`[${CAPTION_DATA_ATTR}='${remove}']`)
-      .forEach((final) => captionsContainer.removeChild(final));
+    var oldFinals = document.querySelectorAll(`[${ATTR_TS}='${remove}']`);
+    oldFinals.forEach((final) => final.remove());
   }
 });

@@ -7,12 +7,12 @@ body {
 #captions {
   overflow: hidden;
 }
-div[data-caption-ts] {
-  background: black;
-  color: white;
+#captions div {
   font-family: Helvetica, sans-serif;
   font-size: 36px;
   padding: 5px;
+  background: black;
+  color: white;
   line-height: 1.25em;
   display: inline;
 }
